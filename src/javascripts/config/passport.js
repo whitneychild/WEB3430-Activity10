@@ -1,4 +1,4 @@
-const LocalStrategy = require('passport_local').Strategy
+const LocalStrategy = require('passport-local').Strategy
 import { User } from '../models/user'
 export const strategy = new LocalStrategy (
     function(username, password, done){

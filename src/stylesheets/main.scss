@@ -46,6 +46,10 @@ body {
                     color: white;
                 }
             }
+
+            &:first-child {
+                flex: 1;
+            }
         }
     }
 

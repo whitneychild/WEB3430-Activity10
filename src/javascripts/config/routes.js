@@ -1,6 +1,6 @@
 import express from 'express'
 
-import {contactPage, aboutPage, indexPage} from '../controllers/index'
+import {contactPage, aboutPage, indexPage, signInPage, signUpPage} from '../controllers/index'
 import { contactAPI } from '../controllers/contacts'
 import {allMoviesAPI} from '../controllers/movies'
 import {registerUserAPI, signUserInAPI} from '../controllers/users'
@@ -27,6 +27,9 @@ export function configureRoutes(app){
     router.get('/', indexPage)
     router.get('/about', aboutPage)
     router.get('/contact', contactPage)
+    router.get('/signin', signInPage)
+    router.get('/signup', signUpPage)
+
     router.get('/movies*', indexPage)
     router.get('.register', indexPage)
     router.get('/signin', indexPage)
