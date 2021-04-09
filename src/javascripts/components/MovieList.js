@@ -3,10 +3,13 @@ import Movie from './Movie'
 import { Switch, Route, Link, Redirect, useHistory } from 'react-router-dom'
 import { About, ErrorNotFound } from './Pages'
 import MovieForm from './MovieForm'
+import { useCookies } from 'react-cookie'
 
 export const MovieContext = createContext()
 export default function MovieList() {
   const [movies, setMovies] = useState()   
+  const [cookies, setCookie, removeCookie] = useCookies(['token'])
+  let [authenticated, setAuthenticated] = useState(cookies.token !== undefined)
   const history = useHistory() 
 
   useEffect(() => {     
@@ -32,7 +35,7 @@ export default function MovieList() {
     return <p>Loading...</p>
 
   return (
-        <MovieContext.Provider value={{movies, setMovies}}>  
+        <MovieContext.Provider value={{movies, setMovies, setAuthenticated}}>  
           <div className="pull-content-right">
             <Route path ="/movies">
               <button className="primary" onClick={

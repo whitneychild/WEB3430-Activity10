@@ -2,10 +2,11 @@ import express from 'express'
 
 import {contactPage, aboutPage, indexPage, signInPage, signUpPage} from '../controllers/index'
 import { contactAPI } from '../controllers/contacts'
-import {allMoviesAPI} from '../controllers/movies'
+import {allMoviesAPI, oneMovieAPI, createMovieAPI, updateMovieAPI, deleteMovieAPI} from '../controllers/movies'
 import {registerUserAPI, signUserInAPI} from '../controllers/users'
 import jwt from 'jsonwebtoken'
 import { APP_SECRET } from './vars'
+
 
 let router = express.Router()
 
@@ -15,6 +16,15 @@ function isSignedIn(req) {
         return true
     }catch(err) {
         return false
+    }
+}
+
+function requireSignIn(req, res, next) {
+    if(isSignedIn(req)){
+        next()
+    }else {
+        res.status(401)
+        res.end()
     }
 }
 
@@ -34,11 +44,17 @@ export function configureRoutes(app){
     router.get('.register', indexPage)
     router.get('/signin', indexPage)
 
+    // Movies API Endpoints
     router.get('/api/movies', allMoviesAPI)
+    router.get('/api/movies/:id', oneMovieAPI)
+    router.post('api/movies', requireSignIn, createMovieAPI)
+    router.put('api/movies/:id', requireSignIn, updateMovieAPI)
+    router.delete('/api/movies:id', requireSignIn, deleteMovieAPI)
 
     // Users
     router.post('/api/users/register', registerUserAPI)
     router.post('/api/users/signin', signUserInAPI)
+
     router.get('/api/contact', contactAPI)
 
     app.use('/', router)

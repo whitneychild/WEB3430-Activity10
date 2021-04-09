@@ -19,22 +19,25 @@ const customStyles = {
 };
 
 export default function Movie(props) {
-    let { movies, setMovies } = useContext(MovieContext)
+    let { movies, setMovies, authenticated, setAuthenticated } = useContext(MovieContext)
     let [modalOpen, setModalOpen] = useState(false)
     const history = useHistory()
     const onLike = props.onLike
     const m = props.movie
     const deleteMovie = () => {
-      for(let i in movies){
-        if(movies[i].id === m.id) {
-          movies.splice(+i, 1)
-        }
-      }
-
-      setMovies([...movies])
-      setModalOpen(false)
-      history.push('/movies')
-      toast('Movie successfully deleted')
+      fetch('/api/movies/${m.id}', {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: 'same-origin',
+      }).then(() => {
+        toast('Successfully deleted', {
+          onClose: () => {
+            document.location = "/movies"
+          }
+        })
+      })
     }
     
     return (
@@ -51,7 +54,10 @@ export default function Movie(props) {
             </li>
           </ul>
           <button className="primary" onClick={() => history.push(`/movies/${m.id}/edit`)}>Edit</button>
-          <button className="primary" onClick={() => setModalOpen(true)}>Delete</button>
+          <button className="primary" onClick={() => {
+            if(authenticated) setModalOpen(true)
+            else document.location = '/signin'
+            }}>Delete</button>
         </div>
 
         <Modal isOpen={modalOpen} on RequestClose={()=>setModalOpen(false)}

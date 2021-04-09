@@ -27,8 +27,13 @@ const validationSchema = yup.object({
     imdbID: yup.string().required()
 })
 export default function MovieForm() {
-    let {movies, setMovies} = useContext(MovieContext)
+    let {movies, setMovies, authenticated, setAuthenticated} = useContext(MovieContext)
     let {mid} = useParams()
+
+    if(!authenticated){
+        document.location = '/signin'
+        return <></>
+    }
 
     let movie = mid ? movies.find(m => m.id == mid) : {}
     let is_new = mid === undefined
